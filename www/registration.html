@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="telephone=no" name="format-detection">    
+    <meta content=
+    "user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"
+    name="viewport">
+    <script src="cordova.js" type="text/javascript"></script>
+    <title>Garden of Eden</title>
+</head>
+<body>	
+	<div class='pages' id='images' style="display:block;">
+		</br></br>
+		<button onclick="captureDrivers();">Take Picture of Driver's License</button><br>
+		<img id="image" src="" style="height:60px; width:60px; display:none;">
+		<button onclick="changePage('images', 'rules');">Next</button>
+	</div>
+	<div class='pages' id='rules' style="display:none;">
+		</br></br>
+		<img id="agreement" src="http://goehints.com/agreement.php" style="width:100%;"></br>
+		<button onclick="changePage('rules', 'images');">Back</button>
+		<button onclick="submit();">Submit</button>
+	</div>
+</body>
+</html>
+<script>
+    var pictureSource; 
+    var destinationType;
+    var driversLicenseImageURI;
+    var driversLicenseName;
+    
+    document.addEventListener("deviceready", onDeviceReady, false);
+    
+    function onDeviceReady() {
+        pictureSource = navigator.camera.PictureSourceType;
+        destinationType = navigator.camera.DestinationType;
+        navigator.notification.alert("Ready!!", function(){}, "Ready Message", "");
+    }
+    
+    function captureDrivers() {
+		alert("tset");
+        navigator.camera.getPicture(captureDriversSuccess, captureFail, {
+            quality: 30,
+            targetWidth: 600,
+            targetHeight: 600,
+            destinationType: destinationType.FILE_URI
+        });
+    }
+    
+    function captureDriversSuccess(imageURI) {
+        driversLicenseImageURI = imageURI;
+        driversLicenseName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+        
+        var options = new FileUploadOptions();
+        options.fileKey = "file";
+        options.fileName = driversLicenseName;
+        options.mimeType = "image/jpeg";
+        var params = new Object();
+        options.params = params;
+        options.chunkedMode = false;
+        options.headers = {
+            Connection: "close"
+        };
+        var ft = new FileTransfer();
+        ft.upload(imageURI, "http://goehints.com/phonegap_temporary_upload.php", temporaryDriversSuccess, fail, options);
+    }
+    
+    function captureFail(message) {
+        //alert('Failed because: ' + message);
+    }
+    function temporaryDriversSuccess(response) {
+        var cameraImage = document.getElementById('image');
+        cameraImage.style.display = 'block';
+        cameraImage.src = "http://goehints.com/temporary_images/" + driversLicenseName;
+    }
+    
+    function fail(error) {
+        navigator.notification.alert("Error occurred with code: " + error.code, function(){}, "Error", "");
+    }
+    
+    function submit() {
+        var imageURI = driversLicenseImageURI;
+        driversLicenseName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+        
+        var options = new FileUploadOptions();
+        options.fileKey = "file";
+        options.fileName = driversLicenseName;
+        options.mimeType = "image/jpeg";
+        var params = new Object();
+        options.params = params;
+        options.chunkedMode = false;
+        options.headers = {
+            Connection: "close"
+        };
+        var ft = new FileTransfer();
+        ft.upload(imageURI, "http://goehints.com/phonegap_drivers_upload.php", uploadDriversSuccess, fail, options);
+    }
+    
+    function uploadDriversSuccess() {
+        alert("UPLOADED");
+    }
+	
+	function changePage(current, next) {
+		document.getElementById(current).style.display = 'none';
+		document.getElementById(next).style.display = 'block';
+	}
+</script>
