@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.revivalx.cordova.file-transfer" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>UploadCordova</name>
+<widget id="com.innovativemanagement360" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>GoeFrontend</name>
     <description>
-        This source code provides example for upload image.
+        Goe Front-end
     </description>
-    <author email="nurdinnorazanservices@gmail.com" href="http://revivalx.com">
-        Mohammad Nurdin bin Norazan
+    <author email="jeffrey@innovativemanagement.com" href="http://innovativemanagement360.com">
+        Jeffrey Cheung
     </author>
+	<gap:plugin name="com.phonegap.plugins.barcodescanner" version="2.0.0" />
     <content src="index.html" />
     <access origin="*" />
 </widget>
